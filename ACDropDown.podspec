@@ -83,7 +83,7 @@ Pod::Spec.new do |spec|
   #
 
   # spec.source       = { :git => "http://EXAMPLE/ACDropDown.git", :tag => "#{spec.version}" }
-  spec.source       = { :path => '../ACDropDown', :tag => "#{spec.version}" }
+  spec.source       = { :path => 'https://github.com/asfcarvalho/ACDropDown', :tag => "#{spec.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

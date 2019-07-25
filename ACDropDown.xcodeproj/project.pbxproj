@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10A9F45922E24E6500BFAEC7 /* UITextField+custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A9F45822E24E6500BFAEC7 /* UITextField+custom.swift */; };
 		10BBEB7A22E0F28E00EBE887 /* ACDropDown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10BBEB7022E0F28C00EBE887 /* ACDropDown.framework */; };
 		10BBEB7F22E0F28E00EBE887 /* ACDropDownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BBEB7E22E0F28E00EBE887 /* ACDropDownTests.swift */; };
 		10BBEB8122E0F28E00EBE887 /* ACDropDown.h in Headers */ = {isa = PBXBuildFile; fileRef = 10BBEB7322E0F28C00EBE887 /* ACDropDown.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		10A9F45822E24E6500BFAEC7 /* UITextField+custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+custom.swift"; sourceTree = "<group>"; };
 		10BBEB7022E0F28C00EBE887 /* ACDropDown.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ACDropDown.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		10BBEB7322E0F28C00EBE887 /* ACDropDown.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACDropDown.h; sourceTree = "<group>"; };
 		10BBEB7422E0F28C00EBE887 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 		10BBEB7222E0F28C00EBE887 /* ACDropDown */ = {
 			isa = PBXGroup;
 			children = (
+				10A9F45822E24E6500BFAEC7 /* UITextField+custom.swift */,
 				10BBEB8C22E0F3AD00EBE887 /* UIView+anchors.swift */,
 				10BBEB8A22E0F36200EBE887 /* DropDownModel.swift */,
 				10BBEB7322E0F28C00EBE887 /* ACDropDown.h */,
@@ -286,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10A9F45922E24E6500BFAEC7 /* UITextField+custom.swift in Sources */,
 				10BBEB8B22E0F36200EBE887 /* DropDownModel.swift in Sources */,
 				10BBEB8D22E0F3AD00EBE887 /* UIView+anchors.swift in Sources */,
 			);
