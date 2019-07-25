@@ -16,6 +16,25 @@ open class DropDownModel: UIView {
     fileprivate var dropDownInfo: DropDown?
     fileprivate var dropDownList: [String]?
     
+    @objc fileprivate dynamic var _lineViewColor = UIColor.black {
+        willSet {
+            lineView.backgroundColor = newValue
+        }
+    }
+    
+    public var lineViewColor: UIColor? {
+        get {
+            return _lineViewColor
+        }
+        
+        set {
+            _lineViewColor = newValue ?? UIColor.black
+        }
+    }
+   
+    
+    fileprivate let lineView = UIView()
+    
     public var delegate: DropDownDelegate?
     public var dataSource: DropDownDataSource?
     
@@ -57,6 +76,10 @@ open class DropDownModel: UIView {
         self.addSubview(textField)
         textField.fillSuperview(padding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 40))
         textField.isUserInteractionEnabled = isEditable
+        
+        //MARK: Line
+        self.addSubview(lineView)
+        lineView.anchor(top: textField.bottomAnchor, leading: textField.leadingAnchor, bottom: nil, trailing: textField.trailingAnchor, size: CGSize(width: 0, height: 1))
         
         //MARK: Icon
         icon.removeFromSuperview()
