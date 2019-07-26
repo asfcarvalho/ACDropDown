@@ -191,6 +191,7 @@ open class DropDownModel: UIView {
             self.textField.text = value
         }
         delegate?.dropDownAction(self, index, value)
+        fadeInOut(true)
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -249,9 +250,7 @@ extension DropDownModel: UITextFieldCustomProtocol {
         dropDownInfo?.hide()
         if textField.text?.isEmpty == true {
             self.delegate?.dropDownCanceled(self)
-            fadeInOut(false)
         }else {
-            fadeInOut(true)
             if let selectedIndex = self.dropDownInfo?.dataSource.firstIndex(of: self.textField.text ?? "") {
                 self.selected(selectedIndex, self.dropDownInfo?.dataSource[selectedIndex] ?? "")
             }else {
