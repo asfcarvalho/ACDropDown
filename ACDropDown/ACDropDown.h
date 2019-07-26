@@ -1,9 +1,9 @@
 //
-//  ACDropDown.h
-//  ACDropDown
+//  DropDownModel.swift
+//  Oncoclinicas
 //
-//  Created by Proaire on 18/07/19.
-//  Copyright © 2019 asfcarvalho. All rights reserved.
+//  Created by Anderson Carvalho on 08/11/17.
+//  Copyright © 2017 asfcarvalho. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

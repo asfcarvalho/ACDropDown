@@ -38,15 +38,6 @@ open class DropDownModel: UIView {
         }
     }
     
-    @objc fileprivate dynamic var _placeHolder: String?
-    
-    public var placeholder: String? {
-        didSet {
-            self._placeHolder = placeholder
-            setupTextFieldtitle()
-        }
-    }
-    
     fileprivate lazy var textFieldTitle: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
@@ -102,8 +93,6 @@ open class DropDownModel: UIView {
         textField.fillSuperview(padding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 40))
         textField.isUserInteractionEnabled = isEditable
         
-        setupTextFieldtitle()
-        
         //MARK: Line
         lineView.removeFromSuperview()
         self.addSubview(lineView)
@@ -116,10 +105,10 @@ open class DropDownModel: UIView {
         
     }
     
-    fileprivate func setupTextFieldtitle() {
-        self.textField.placeholder = self._placeHolder
+    fileprivate func setupTextFieldtitle(_ title: String) {
+        self.textField.placeholder = title
         textFieldTitle.removeFromSuperview()
-        textFieldTitle.text = self._placeHolder
+        textFieldTitle.text = title
         self.addSubview(textFieldTitle)
         textFieldTitle.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, padding: UIEdgeInsets(top: -4, left: 0, bottom: 0, right: 0), size: CGSize(width: 0, height: 13))
         textFieldTitle.alpha = 0.0
@@ -177,7 +166,7 @@ open class DropDownModel: UIView {
             
             if let title = dataSource?.dropDownTitle?(self) {
                 DispatchQueue.main.async {
-                    self.textField.placeholder = title
+                    self.setupTextFieldtitle(title)
                 }
             }else {
                 DispatchQueue.main.async {

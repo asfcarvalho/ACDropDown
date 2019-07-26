@@ -1,9 +1,9 @@
 //
-//  UIView+anchors.swift
-//  GenBit
+//  DropDownModel.swift
+//  Oncoclinicas
 //
-//  Created by Proaire on 01/07/19.
-//  Copyright © 2019 Treepart. All rights reserved.
+//  Created by Anderson Carvalho on 08/11/17.
+//  Copyright © 2017 asfcarvalho. All rights reserved.
 //
 
 import UIKit
