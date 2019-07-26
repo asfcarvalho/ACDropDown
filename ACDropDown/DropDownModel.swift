@@ -38,6 +38,22 @@ open class DropDownModel: UIView {
         }
     }
     
+    @objc fileprivate dynamic var _placeHolder: String?
+    
+    public var placeholder: String? {
+        didSet {
+            self._placeHolder = placeholder
+            setupTextFieldtitle()
+        }
+    }
+    
+    fileprivate lazy var textFieldTitle: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.clipsToBounds = false
+        return label
+    }()
+    
     fileprivate lazy var lineView: UIView = { [weak self] in
        let view = UIView()
         view.backgroundColor = self?.lineViewColor
@@ -89,13 +105,22 @@ open class DropDownModel: UIView {
         //MARK: Line
         lineView.removeFromSuperview()
         self.addSubview(lineView)
-        lineView.anchor(top: textField.bottomAnchor, leading: textField.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, size: CGSize(width: 0, height: lineViewHeight))
+        lineView.anchor(top: textField.bottomAnchor, leading: textField.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, padding: UIEdgeInsets(top: -8, left: 0, bottom: 0, right: 0), size: CGSize(width: 0, height: lineViewHeight))
         
         //MARK: Icon
         icon.removeFromSuperview()
         self.addSubview(icon)
         icon.anchor(top: nil, leading: nil, bottom: nil, trailing: self.trailingAnchor, centerX: nil, centerY: self.centerYAnchor, padding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16), size: CGSize(width: 20, height: 20))
         
+    }
+    
+    fileprivate func setupTextFieldtitle() {
+        self.textField.placeholder = self._placeHolder
+        textFieldTitle.removeFromSuperview()
+        textFieldTitle.text = self._placeHolder
+        self.addSubview(textFieldTitle)
+        textFieldTitle.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, padding: UIEdgeInsets(top: -4, left: 0, bottom: 0, right: 0), size: CGSize(width: 0, height: 13))
+        textFieldTitle.alpha = 0.0
     }
     
     fileprivate func configDropDown(_ anchorView: UIView? = nil) {
@@ -122,10 +147,13 @@ open class DropDownModel: UIView {
         dropDownInfo?.cancelAction = {() in
             if self.textField.text?.isEmpty == true {
                 self.delegate?.dropDownCanceled(self)
+                self.fadeInOut(false)
             }else if let selectedIndex = self.dropDownInfo?.dataSource.firstIndex(of: self.textField.text ?? "") {
                 self.selected(selectedIndex, self.dropDownInfo?.dataSource[selectedIndex] ?? "")
+                self.fadeInOut(true)
             }else {
                 self.delegate?.dropDownCanceled(self)
+                self.fadeInOut(true)
             }
             self.dropDownInfo?.hide()
         }
@@ -175,6 +203,20 @@ open class DropDownModel: UIView {
         tap.delegate = self
     }
     
+    fileprivate func fadeInOut(_ isIn: Bool) {
+        if isIn {
+            
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: UIView.AnimationOptions.transitionCurlUp, animations: {
+                self.textFieldTitle.alpha = 1.0
+            }, completion: nil)
+            
+        }else {
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: UIView.AnimationOptions.transitionCurlDown, animations: {
+                self.textFieldTitle.alpha = 0.0
+            }, completion: nil)
+        }
+    }
+    
     @objc fileprivate func setupDropDownActions(_ sender: AnyObject?) {
         dropDownInfo?.show()
         
@@ -194,11 +236,12 @@ extension DropDownModel: UITextFieldCustomProtocol {
         dropDownInfo?.show()
         if textField.text?.isEmpty == true {
             dropDownInfo?.dataSource = dropDownList ?? []
+            fadeInOut(false)
         }else {
             dropDownInfo?.dataSource = dropDownList?.filter({ (item) -> Bool in
                 return item.lowercased().contains(textField.text?.lowercased() ?? "")
             }) ?? []
-            
+            fadeInOut(true)
         }
     }
     
@@ -206,7 +249,9 @@ extension DropDownModel: UITextFieldCustomProtocol {
         dropDownInfo?.hide()
         if textField.text?.isEmpty == true {
             self.delegate?.dropDownCanceled(self)
+            fadeInOut(false)
         }else {
+            fadeInOut(true)
             if let selectedIndex = self.dropDownInfo?.dataSource.firstIndex(of: self.textField.text ?? "") {
                 self.selected(selectedIndex, self.dropDownInfo?.dataSource[selectedIndex] ?? "")
             }else {
