@@ -16,6 +16,12 @@ open class DropDownModel: UIView {
     fileprivate var dropDownInfo: DropDown?
     fileprivate var dropDownList: [String]?
     
+    public var lineViewHeight: CGFloat = 0.5 {
+        didSet {
+            configView()
+        }
+    }
+    
     @objc fileprivate dynamic var _lineViewColor = UIColor.black {
         willSet {
             lineView.backgroundColor = newValue
@@ -31,11 +37,10 @@ open class DropDownModel: UIView {
             _lineViewColor = newValue ?? UIColor.black
         }
     }
-   
     
     fileprivate lazy var lineView: UIView = { [weak self] in
        let view = UIView()
-        view.backgroundColor = self?._lineViewColor
+        view.backgroundColor = self?.lineViewColor
         return view
     }()
     
@@ -84,7 +89,7 @@ open class DropDownModel: UIView {
         //MARK: Line
         lineView.removeFromSuperview()
         self.addSubview(lineView)
-        lineView.anchor(top: textField.bottomAnchor, leading: textField.leadingAnchor, bottom: nil, trailing: textField.trailingAnchor, size: CGSize(width: 0, height: 1))
+        lineView.anchor(top: textField.bottomAnchor, leading: textField.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, size: CGSize(width: 0, height: lineViewHeight))
         
         //MARK: Icon
         icon.removeFromSuperview()
