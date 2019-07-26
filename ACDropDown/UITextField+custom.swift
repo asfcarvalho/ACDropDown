@@ -232,7 +232,7 @@ public class UITextFieldCustom: UITextField {
     
     fileprivate func messageAnchor() {
         let messageSize = _errorMessage.textRect(forBounds: self.frame, limitedToNumberOfLines: 0)
-        let topMessage: CGFloat = 1
+        let topMessage: CGFloat = -4
         _errorMessage.anchor(top: self.bottomAnchor, leading: self.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, padding: UIEdgeInsets(top: topMessage, left: 4, bottom: 0, right: 4), size: CGSize(width: 0, height: messageSize.height))
     }
     

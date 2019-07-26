@@ -102,6 +102,8 @@ open class DropDownModel: UIView {
         textField.fillSuperview(padding: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 40))
         textField.isUserInteractionEnabled = isEditable
         
+        setupTextFieldtitle()
+        
         //MARK: Line
         lineView.removeFromSuperview()
         self.addSubview(lineView)
