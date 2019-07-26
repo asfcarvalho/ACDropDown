@@ -33,7 +33,11 @@ open class DropDownModel: UIView {
     }
    
     
-    fileprivate let lineView = UIView()
+    fileprivate lazy var lineView: UIView = { [weak self] in
+       let view = UIView()
+        view.backgroundColor = self?._lineViewColor
+        return view
+    }()
     
     public var delegate: DropDownDelegate?
     public var dataSource: DropDownDataSource?
@@ -78,6 +82,7 @@ open class DropDownModel: UIView {
         textField.isUserInteractionEnabled = isEditable
         
         //MARK: Line
+        lineView.removeFromSuperview()
         self.addSubview(lineView)
         lineView.anchor(top: textField.bottomAnchor, leading: textField.leadingAnchor, bottom: nil, trailing: textField.trailingAnchor, size: CGSize(width: 0, height: 1))
         
