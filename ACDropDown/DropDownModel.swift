@@ -219,10 +219,12 @@ extension DropDownModel: UITextFieldCustomProtocol {
     public func setErrorDropDown(_ isError: Bool) {
         if isError {
             self.layer.borderColor = UIColor.red.cgColor
+            self.lineView.backgroundColor = UIColor.red
             self.textFieldTitle.textColor = UIColor.red
         }else {
-            self.layer.borderColor = UIColor.black.cgColor
-            self.textFieldTitle.textColor = UIColor.black
+            self.layer.borderColor = _lineViewColor.cgColor
+            self.lineView.backgroundColor = _lineViewColor
+            self.textFieldTitle.textColor = _lineViewColor
         }
     }
     
