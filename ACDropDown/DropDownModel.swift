@@ -181,7 +181,8 @@ open class DropDownModel: UIView {
         DispatchQueue.main.async {
             self.textField.text = value
         }
-        delegate?.dropDownAction(self, index, value)
+        let indexFilter = dropDownList?.firstIndex(of: value) ?? 0
+        delegate?.dropDownAction(self, indexFilter, value)
         fadeInOut(true)
     }
 
