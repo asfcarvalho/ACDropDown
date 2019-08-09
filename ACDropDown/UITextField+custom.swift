@@ -16,6 +16,8 @@ import UIKit
 
 public class UITextFieldCustom: UITextField {
     
+    static fileprivate let titleColorDefault = UIColor(white: 0.0, alpha: 0.92)
+    
     public let iconPassword: UIImageView? = {
        let image = UIImageView()
         image.image = UIImage(named: "iconEyeOpen")
@@ -51,6 +53,21 @@ public class UITextFieldCustom: UITextField {
         }
     }
     
+    @objc public dynamic var lineViewColor = UIColor(red: 230/255, green: 231/255, blue: 236/255, alpha: 1.0) {
+        willSet {
+            lineView.backgroundColor = newValue
+        }
+    }
+    
+    public var lineViewSelectedColor: UIColor = UIColor(red: 149/255, green: 193/255, blue: 15/255, alpha: 1.0)
+    public var lineViewSize: CGFloat = 2.0
+    
+    fileprivate lazy var lineView: UIView = { [weak self] in
+        let line = UIView()
+        line.backgroundColor = self?.lineViewColor
+        return line
+    }()
+    
     /// To set string of message to show on error
     /// by default `Error`
     var errorMessage: String = "Error"
@@ -62,10 +79,51 @@ public class UITextFieldCustom: UITextField {
         return label
     }()
     
+    fileprivate dynamic var _title: String?
+    fileprivate dynamic var _titleSize: CGFloat = 2
+    fileprivate dynamic var _titleColor: UIColor = titleColorDefault
+    
+    public var titleSize: CGFloat? {
+        didSet {
+            self._titleSize = titleSize ?? 2
+            setupTextField()
+        }
+    }
+    
+    public var titleColor: UIColor? {
+        didSet {
+            self._titleColor = titleColor ?? UITextFieldCustom.titleColorDefault
+            setupTextField()
+        }
+    }
+    
+    public var title: String? {
+        didSet {
+            self._title = title
+            setupTextFieldtitle()
+        }
+    }
+    
+    @objc fileprivate dynamic var _placeHolder: String?
+    
+    public override var placeholder: String? {
+        didSet {
+            self._placeHolder = placeholder
+            setupTextField()
+        }
+    }
+    
+    fileprivate lazy var textFieldTitle: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "SofiaPro-Regular", size: 16)
+        label.clipsToBounds = false
+        return label
+    }()
+    
     /// To set the error message color
     ///
     /// by default *Red*
-    var errorColor: UIColor = UIColor.red
+    var errorColor: UIColor = UIColor(red: 255/255, green: 74/255, blue: 61/255, alpha: 1.0)
     /// To set the error message font size
     ///
     /// by default *12.0*
@@ -99,17 +157,48 @@ public class UITextFieldCustom: UITextField {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func setupTitle(_ title: String?, _ size: CGFloat? = nil, _ color: UIColor? = nil) {
+        self._title = title
+        self._titleSize = size ?? 16
+        self._titleColor = color ?? UITextFieldCustom.titleColorDefault
+        setupTextField()
+    }
+    
     fileprivate func setupTextField() {
         
-        self.font = UIFont.systemFont(ofSize: 17)
+        self.font = UIFont.systemFont(ofSize: 16)
         if !isDropDown {
             self.layer.borderWidth = 1.0
             self.layer.borderColor = UIColor.black.cgColor
         }
         self.returnKeyType = .next
         
+        //MARK: Title
+        setupTextFieldtitle()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(textDidChange), name: NSNotification.Name(rawValue: "UITextFieldTextDidChangeNotification"), object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(textDidEndEditing), name: NSNotification.Name(rawValue: "UITextFieldTextDidEndEditingNotification"), object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(textDidBeginEditing), name: NSNotification.Name(rawValue: "UITextFieldTextDidBeginEditingNotification"), object: self)
+    }
+    
+    fileprivate func setupLineBottom(_ height: CGFloat = 0.5) {
+        lineView.removeFromSuperview()
+        self.addSubview(lineView)
+        lineView.anchor(top: self.bottomAnchor, leading: self.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, padding: UIEdgeInsets(top: -4, left: 0, bottom: 0, right: 0), size: CGSize(width: 0, height: height))
+    }
+    
+    fileprivate func setupTextFieldtitle() {
+        textFieldTitle.removeFromSuperview()
+        textFieldTitle.font = UIFont(name: "SofiaPro-Regular", size: _titleSize)
+        textFieldTitle.textColor = self._titleColor
+        textFieldTitle.text = self._title ?? self._placeHolder
+        self.addSubview(textFieldTitle)
+        textFieldTitle.anchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: nil, trailing: self.trailingAnchor, padding: UIEdgeInsets(top: -8, left: 0, bottom: 0, right: 0), size: CGSize(width: 0, height: 16))
+        if self._title == nil {
+            textFieldTitle.alpha = 0.0
+        }else {
+            textFieldTitle.alpha = 1.0
+        }
     }
     
     //MARK: Setup password
@@ -139,12 +228,44 @@ public class UITextFieldCustom: UITextField {
         NotificationCenter.default.removeObserver(self)
     }
     
+    @objc fileprivate func textDidBeginEditing() {
+        setupErrorMessage(false, true)
+        lineView.backgroundColor = lineViewSelectedColor
+    }
+    
     @objc fileprivate func textDidEndEditing() {
         textFieldCustomDelegate?.onTextDidEndEditing?(self)
+        lineView.backgroundColor = lineViewSelectedColor
+    }
+    
+    fileprivate func fadeInOut(_ isIn: Bool) {
+        if isIn {
+            if self.borderType != TextFieldBorderTypeEnum.Solid {
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: UIView.AnimationOptions.transitionCurlUp, animations: {
+                    self.textFieldTitle.alpha = 1.0
+                }, completion: nil)
+            }
+            
+        }else {
+            if self.borderType != TextFieldBorderTypeEnum.Solid {
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: UIView.AnimationOptions.transitionCurlDown, animations: {
+                    self.textFieldTitle.alpha = 0.0
+                }, completion: nil)
+            }
+        }
     }
     
     // MARK: used to put the mask in textfield
     @objc fileprivate func textDidChange() {
+        
+        if _title == nil {
+            if (self.text?.count ?? 0) == 1 {
+                fadeInOut(true)
+                
+            }else if (self.text?.count ?? 0) < 1 {
+                fadeInOut(false)
+            }
+        }
         
         // just to verify if is CPF or CNPJ
         if isCPFOrCNPJ || isJustCPF {
@@ -217,15 +338,24 @@ public class UITextFieldCustom: UITextField {
         }
     }
     
-    fileprivate func setupErrorMessage() {
+    fileprivate func setupErrorMessage(_ isError: Bool, _ isSelected: Bool = false) {
         DispatchQueue.main.async {
-            self._errorMessage.text = self.errorMessage
-            self._errorMessage.font = UIFont.systemFont(ofSize: self.errorFontSize)
-            self._errorMessage.textColor = self.errorColor
-            if !self.isDropDown {
-                self.layer.borderColor = self.errorColor.cgColor
+            self._errorMessage.removeFromSuperview()
+            if isError {
+                self._errorMessage.text = self.errorMessage
+                self._errorMessage.font = UIFont.systemFont(ofSize: self.errorFontSize)
+                self._errorMessage.textColor = self.errorColor
+                if !self.isDropDown {
+                    self.layer.borderColor = self.errorColor.cgColor
+                }else {
+                    self.textFieldCustomDelegate?.setErrorDropDown(true)
+                }
             }else {
-                self.textFieldCustomDelegate?.setErrorDropDown(true)
+                if !self.isDropDown {
+                    self.layer.borderColor = UIColor.black.cgColor
+                }else {
+                    self.textFieldCustomDelegate?.setErrorDropDown(false)
+                }
             }
         }        
     }
